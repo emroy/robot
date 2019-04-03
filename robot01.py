@@ -2,10 +2,10 @@ import pyautogui as ui
 import time
 import os
 
-result = input('Comenzar, [seguir,noseguir]?')
+result = input('introduzca una opcion [seguir, noseguir] \n ')
 
 if result =='seguir' :
-    os.chdir('c:\wamp\www')
+    #os.chdir('c:\wamp\www')
     madda = True
     
     while madda == True:
@@ -19,7 +19,7 @@ if result =='seguir' :
             ui.moveTo(x,y,.5)
             ui.doubleClick()
 elif result == 'noseguir':
-    os.chdir('c:\wamp\www')
+    #os.chdir('c:\wamp\www')
     madda = True
     
     while madda == True:
