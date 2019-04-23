@@ -1,6 +1,7 @@
 import pyautogui as ui
 import time
 import os
+import threading
 
 #Default configs
 ui.FAILSAFE = True
@@ -14,7 +15,7 @@ def clickFollow():
         x, y = ui.locateCenterOnScreen('follow.png')
         ui.moveTo(x, y, .5)
         ui.doubleClick()
-        wait(1)
+        wait(.5)
     except:
         print('Scrolling for more Follows')
         ui.scroll(-200, pause=1.)
@@ -25,7 +26,7 @@ def clickUnfollow():
         x, y  = ui.locateCenterOnScreen('following.png')
         ui.moveTo(x,y,.5)
         ui.click()
-        wait(1)
+        wait(.5)
     except:
         print('Scrolling for more Unfollow')
         ui.scroll(-200, pause=1.)
@@ -36,20 +37,35 @@ def confirmUnfollow():
         x, y = ui.locateCenterOnScreen('confirmation.png')
         ui.moveTo(x,y,.5)
         ui.click()
-        wait(1)
+        wait(.5)
     except:
         print('No confirmation popup shown, looking for more unfollows')
         clickUnfollow()
 
-
-result = input('introduzca una opcion [seguir, noseguir] \n ')
-
-
-if result =='seguir' :
+def seguir():
     while True:
         clickFollow()
-elif result == 'noseguir':
+        pass
+
+def noseguir():
     while True:
         clickUnfollow()
         confirmUnfollow()
+        pass
+
+
+result = input('introduzca una opcion [seguir, noseguir] \n ')
+period = int(input('Enter the amount of seconds to run \n'))
+
+if result =='seguir' :
+    process = threading.Thread(target=seguir)
+    process.daemon = True
+    process.start()
+    time.sleep(period)
+elif result == 'noseguir':
+    process = threading.Thread(target=noseguir)
+    process.daemon = True
+    process.start()
+    time.sleep(period)
+        
             
