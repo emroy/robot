@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 import pyautogui as ui
 import time
 import os
@@ -6,13 +7,18 @@ import threading
 #Default configs
 ui.FAILSAFE = True
 
+def openPanel(type):
+        x, y = ui.locateCenterOnScreen(type+'.png', grayscale=False)
+        ui.moveTo(x, y, .5)
+        ui.doubleClick()
+
 def wait(secs):
     time.sleep(secs)
 
 #Click de seguir a las personas
 def clickFollow():
     try:
-        x, y = ui.locateCenterOnScreen('follow.png')
+        x, y = ui.locateCenterOnScreen('follow.png', grayscale=False)
         ui.moveTo(x, y, .5)
         ui.doubleClick()
         wait(.5)
@@ -23,7 +29,7 @@ def clickFollow():
 #Click de dejar de seguir
 def clickUnfollow():
     try:
-        x, y  = ui.locateCenterOnScreen('following.png')
+        x, y  = ui.locateCenterOnScreen('following.png', grayscale=False)
         ui.moveTo(x,y,.5)
         ui.click()
         wait(.5)
@@ -34,7 +40,7 @@ def clickUnfollow():
 #Click de confirmar dejar de seguir
 def confirmUnfollow():
     try:
-        x, y = ui.locateCenterOnScreen('confirmation.png')
+        x, y = ui.locateCenterOnScreen('confirmation.png', grayscale=False)
         ui.moveTo(x,y,.5)
         ui.click()
         wait(.5)
@@ -44,11 +50,15 @@ def confirmUnfollow():
 
 def seguir():
     while True:
+        openPanel('seguidores')
+        wait(.5)
         clickFollow()
         pass
 
 def noseguir():
     while True:
+        openPanel('seguidos')
+        wait(.5)
         clickUnfollow()
         confirmUnfollow()
         pass
