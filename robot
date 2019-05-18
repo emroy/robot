@@ -7,13 +7,21 @@ import threading
 #Default configs
 ui.FAILSAFE = True
 
+#Abrir el panel seleccionado de seguidores o de seguidos
 def openPanel(type):
-        x, y = ui.locateCenterOnScreen(type+'.png', grayscale=False)
-        ui.moveTo(x, y, .5)
-        ui.doubleClick()
+        try:
+                x, y = ui.locateOnScreen(type+'.png', confidence=0.5)
+                ui.moveTo(x, y, .5)
+                ui.click()
+                wait(.5)
+        except:
+                print('No se encuentra la opcion de: '+ type)
+                wait(.5)
+                openPanel(type)
 
+#Esperar unos segundos
 def wait(secs):
-    time.sleep(secs)
+        time.sleep(secs)
 
 #Click de seguir a las personas
 def clickFollow():
@@ -48,34 +56,49 @@ def confirmUnfollow():
         print('No confirmation popup shown, looking for more unfollows')
         clickUnfollow()
 
+
 def seguir():
-    while True:
-        openPanel('seguidores')
         wait(.5)
-        clickFollow()
+        while True:
+                print('comenzando nuevo proceso')
+                processRestart = threading.Thread(target=restartSeguir)
+                processRestart.daemon = True
+                processRestart.start()
+                time.sleep(.3*60)
+        pass
+
+def restartSeguir():
+        wait(2)
+        ui.hotkey('F5')
+        print('Reiniciando pagina')
+        wait(1)
+        openPanel('seguidores')
+        wait(1)
+        while True:
+                clickFollow()
         pass
 
 def noseguir():
-    while True:
         openPanel('seguidos')
         wait(.5)
-        clickUnfollow()
-        confirmUnfollow()
+        while True:
+                clickUnfollow()
+                confirmUnfollow()
         pass
 
 
 result = input('introduzca una opcion [seguir, noseguir] \n ')
-period = int(input('Enter the amount of seconds to run \n'))
+period = int(input('Enter the amount of minutes to run \n'))
 
-if result =='seguir' :
-    process = threading.Thread(target=seguir)
-    process.daemon = True
-    process.start()
-    time.sleep(period)
+if result =='seguir':
+        process = threading.Thread(target=seguir)
+        process.daemon = True
+        process.start()
+        time.sleep(period*60)
 elif result == 'noseguir':
-    process = threading.Thread(target=noseguir)
-    process.daemon = True
-    process.start()
-    time.sleep(period)
+        process = threading.Thread(target=noseguir)
+        process.daemon = True
+        process.start()
+        time.sleep(period*60)
         
             
